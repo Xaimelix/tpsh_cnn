@@ -4,22 +4,45 @@
     <title>VGG Image Prediction</title>
 </head>
 <body>
-    <h1>Загрузите изображение для предсказания VGG</h1>
-    <form method="POST" action="/predict" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*">
-        <input type="submit" value="Предсказать">
-    </form>
-    <div id="predictionResult">
-        {% if prediction %}
-            <h2>Предсказание: {{ prediction }}</h2>
-            <p>Вероятность: {{ confidence }}</p>
-        {% endif %}
-        {% if error %}
-            <p style="color: red;">Ошибка: {{ error }}</p>
-        {% endif %}
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; gap: 20px; padding-top: 20px;">
+        <h1>Загрузите изображение для предсказания моделью VGG</h1>
+        <form method="POST" action="/predict" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <input type="file" name="image" id="imageUpload" accept="image/*">
+            <img id="uploadedImage" src="#" alt="Предварительный просмотр изображения" style="max-width: 300px; max-height: 300px; display: none;">
+            <input type="submit" value="Предсказать">
+        </form>
+        <div id="predictionResult" style="text-align: center;">
+            {% if prediction %}
+                <h2>Предсказание: {{ prediction }}</h2>
+                <p>Вероятность: {{ confidence }}</p>
+            {% endif %}
+            {% if error %}
+                <p style="color: red;">Ошибка: {{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
     </div>
 
     <script>
+        const imageUpload = document.getElementById('imageUpload'); // Получаем элемент input file
+        const uploadedImage = document.getElementById('uploadedImage'); // Получаем элемент img
+
+        imageUpload.addEventListener('change', function() { // Добавляем обработчик события change
+            if (imageUpload.files && imageUpload.files[0]) { // Проверяем, что файл выбран
+                const reader = new FileReader(); // Создаем FileReader
+
+                reader.onload = function (e) { // Функция, которая будет вызвана после чтения файла
+                    uploadedImage.src = e.target.result; // Устанавливаем src изображения на dataURL
+                    uploadedImage.style.display = 'block'; // Показываем изображение
+                }
+
+                reader.readAsDataURL(imageUpload.files[0]); // Читаем файл как Data URL
+            } else {
+                uploadedImage.src = '#'; // Очищаем src, если файл не выбран
+                uploadedImage.style.display = 'none'; // Скрываем изображение
+            }
+        });
+
         const form = document.querySelector('form');
         const resultDiv = document.getElementById('predictionResult');
 
