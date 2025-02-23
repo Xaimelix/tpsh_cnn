@@ -8,7 +8,7 @@
 Клонируйте репозиторий проекта:
    ```bash
    git clone https://github.com/Xaimelix/tpsh_cnn
-   cd [папка проекта]
+   cd tpsh_cnn
    ```
 
 Создайте виртуальное окружение
