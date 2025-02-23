@@ -5,6 +5,12 @@
 ## Установка и запуск ## 
 Установите [Python 3.12](https://www.python.org/downloads/release/python-3120/) 
 
+Клонируйте репозиторий проекта:
+   ```bash
+   git clone https://github.com/Xaimelix/tpsh_cnn
+   cd [папка проекта]
+   ```
+
 Создайте виртуальное окружение
   ```
   python -m venv venv
