@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VGG Image Prediction</title>
+</head>
+<body>
+    <h1>Загрузите изображение для предсказания VGG</h1>
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*">
+        <input type="submit" value="Предсказать">
+    </form>
+    <div id="predictionResult">
+        {% if prediction %}
+            <h2>Предсказание: {{ prediction }}</h2>
+            <p>Вероятность: {{ confidence }}</p>
+        {% endif %}
+        {% if error %}
+            <p style="color: red;">Ошибка: {{ error }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const resultDiv = document.getElementById('predictionResult');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    resultDiv.innerHTML = `<p style="color: red;">Ошибка: ${errorData.error}</p>`;
+                    return;
+                }
+
+                const data = await response.json();
+                resultDiv.innerHTML = `<h2>Предсказание: ${data.prediction}</h2><p>Вероятность: ${data.confidence}</p>`;
+
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Ошибка: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
